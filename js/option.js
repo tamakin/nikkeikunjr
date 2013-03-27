@@ -1,4 +1,4 @@
-chrome.browserAction.setBadgeText({text : ""});
+//chrome.browserAction.setBadgeText({text : ""});
 $(function() {
   chrome.extension.getBackgroundPage().getSetting();
   $("#interval").val(interval);

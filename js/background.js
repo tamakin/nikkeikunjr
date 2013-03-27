@@ -40,35 +40,37 @@ function background(mode) {
 
 function getNikkei() {
   var colors = [
-    [0, 255, 0, 255],
+    [0, 0, 255, 255],
     [255, 0, 0, 255]
   ];
   log("getNikkei", "in");
   $.ajax({
-    url: "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=998407.O",
+    url: "http://indexes.nikkei.co.jp/nkave",
     type: 'GET',
   }).then(
     function(res){
       var $data = $(res);
-      var $price = $data.find(".stoksPrice")[1];
-      var price = $price.innerHTML;
-      var change = $data.find(".yjMSt").text();
-      var per = parseFloat(change.match(/(.*)（(.*)%）/)[2]);
-      var delay = $data.find(".real").text();
-      var real = $data.find(".real span").text();
-      delay = delay.replace(real, "");
-      chrome.browserAction.setBadgeText({text : per.toString()});
-      chrome.browserAction.setBadgeBackgroundColor({color : per >= 0 ? colors[0] : colors[1]})
-      chrome.browserAction.setTitle({title : price});
+      var $price = $data.find(".cmn-index_value");
+      var price = $price.text().trim();
       log("price", price);
-      log("per", per);
+      var change = $data.find(".cmn-index_border")[1].innerHTML;
+      var permatch = change.match(/<b>(.*)\((.*)%\)<\/b>/);
+      var per1 = parseFloat(permatch[1]);
+      var per2 = parseFloat(permatch[2]);
+      var delay = $data.find(".ttl-01").text();
+      log("delay", delay);
+      log("per1", per1);
+      log("per2", per2);
+      var per = "前日比 : " + per1 + " (" + per2 + "%)"
+      chrome.browserAction.setBadgeText({text : per2.toString()});
+      chrome.browserAction.setBadgeBackgroundColor({color : per2 >= 0 ? colors[1] : colors[0]})
+      chrome.browserAction.setTitle({title : delay + "\r\n" + price + " " + per});
 
-      var color = per >= 0 ? "green" : "red";
+      var color = per2 >= 0 ? "red" : "blue";
       var notification = window.webkitNotifications.createHTMLNotification(
         chrome.extension.getURL("popup.html?price=" + encodeURI(price)
-                               + "&per=" + encodeURI(changestr)
+                               + "&per=" + encodeURI(per)
                                + "&delay=" + encodeURI(delay)
-                               + "&real=" + encodeURI(real)
                                + "&color=" + encodeURI(color)
                                )
       );

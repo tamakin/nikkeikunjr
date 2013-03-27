@@ -1,6 +1,6 @@
 {
   "name": "にっけいくんJr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
   "description": "日経平均をカジュアルに取ってきます",
   "icons": {
@@ -16,7 +16,7 @@
     "alarms",
     "tabs",
     "notifications",
-    "http://stocks.finance.yahoo.co.jp/stocks/detail/*"
+    "http://indexes.nikkei.co.jp/*"
   ],
   "background": {
     "page": "background.html",
