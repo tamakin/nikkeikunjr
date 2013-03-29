@@ -44,6 +44,14 @@ function getNikkei() {
     [255, 0, 0, 255]
   ];
   log("getNikkei", "in");
+  var hol = localStorage["isStocksHoliday"] == "true" ? true : false;
+  log("isStocksHoliday", hol);
+  if (hol) {
+    chrome.browserAction.setBadgeText({text : "Zzz"});
+    chrome.browserAction.setTitle({title : "休み"});
+    chrome.browserAction.setBadgeBackgroundColor({color : [128, 128, 128, 255]})
+    return;
+  }
   $.ajax({
     url: "http://indexes.nikkei.co.jp/nkave",
     type: 'GET',
@@ -80,10 +88,9 @@ function getNikkei() {
       notification.show();
     },
     function(res){
-      chrome.browserAction.setBadgeText({text : "NG"});
+      chrome.browserAction.setBadgeText({text : "ERR"});
       chrome.browserAction.setBadgeBackgroundColor({color : colors[1] })
-      console.log(res)
+      log("ERROR", res)
     }
   );
-
 }
